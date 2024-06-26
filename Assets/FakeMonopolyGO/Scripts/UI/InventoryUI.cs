@@ -1,32 +1,41 @@
+using System;
+using System.Collections.Generic;
+using MyGame.Core.Services;
+using MyGame.Models;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Text;
-using TMPro;
 
-public class InventoryUI : MonoBehaviour
+namespace MyGame.UI
 {
-    public TMP_Text inventoryText;
-    private InventoryManager inventoryManager;
-
-    public void Initialize(InventoryManager manager)
+    public class InventoryUI : MonoBehaviour, IInventoryObserver
     {
-        if (manager == null)
+        [SerializeField] private TMP_Text _inventoryText;
+
+        private IUIService _uiService;
+
+        public void Initiliaze(IUIService uiService)
         {
-            Debug.LogError("InventoryManager is null in InventoryUI.");
-            return;
+            _uiService = uiService;
+            Debug.Log("InventoryUI initialized with UIService: " + _uiService);
+            Debug.Log("InventoryUI enabled. Registering observer.");
+            _uiService?.RegisterInventoryObserver(this);
         }
 
-        inventoryManager = manager;
-        UpdateInventoryUI();
-    }
-
-    public void UpdateInventoryUI()
-    {
-        StringBuilder sb = new StringBuilder();
-        foreach (var item in inventoryManager.GetItems())
+        private void OnDisable()
         {
-            sb.AppendLine($"{item.Key}: {item.Value.Quantity}");
+            Debug.Log("InventoryUI disabled. Unregistering observer.");
+            _uiService?.UnregisterInventoryObserver(this);
         }
-        inventoryText.text = sb.ToString();
+
+        public void OnInventoryUpdated(Dictionary<ItemType, int> inventory)
+        {
+            Debug.Log("InventoryUI updated with new inventory data.");
+            _inventoryText.text = "";
+            foreach (var item in inventory)
+            {
+                _inventoryText.text += $"{item.Key}: {item.Value}\n";
+            }
+        }
     }
 }
