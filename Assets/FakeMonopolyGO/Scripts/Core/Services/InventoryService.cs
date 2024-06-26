@@ -41,12 +41,19 @@ namespace MyGame.Core.Services
                 JsonUtility.FromJsonOverwrite(json, _inventory);
             }
         }
+        
+        public void ClearInventory()
+        {
+            _inventory.Clear();
+            if (File.Exists(savePath))
+            {
+                File.Delete(savePath);
+            }
+        }
 
         public Dictionary<ItemType, int> GetInventory()
         {
-            {
-                return new Dictionary<ItemType, int>(_inventory);
-            }
+            return new Dictionary<ItemType, int>(_inventory);
         }
     }
 }

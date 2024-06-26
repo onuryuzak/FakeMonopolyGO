@@ -17,13 +17,22 @@ namespace MyGame.Core.Services
 
         private Item GenerateRandomItem()
         {
-            var itemType = (ItemType)_random.Next(0, 3);
+            if (_random.NextDouble() < 0.5)
+            {
+                return null;
+            }
+
+            int enumCount = Enum.GetValues(typeof(ItemType)).Length;
+            var itemType = (ItemType)_random.Next(0, enumCount);
             var quantity = _random.Next(1, 6);
             return new Item { Type = itemType, Quantity = quantity };
         }
 
         public int CollectItem(GridSlot slot)
         {
+            if (slot.Item == null)
+                return 0;
+
             int quantity = slot.Item.Quantity;
             slot.Item = null;
             return quantity;

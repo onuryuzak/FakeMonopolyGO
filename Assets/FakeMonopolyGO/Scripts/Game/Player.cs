@@ -20,15 +20,15 @@ namespace MyGame.Game
 
         public void RollDice(int diceValue)
         {
-            var slots = FindObjectOfType<GameInitializer>().gridSlots;
-            if (diceValue > 0 && diceValue <= slots.Length)
-            {
-                var slot = slots[diceValue - 1];
-                var collectedQuantity = _itemService.CollectItem(slot);
-                _inventoryService.AddItem(slot.Item.Type, collectedQuantity);
-                _inventoryService.SaveInventory();
-                _uiService.UpdateInventoryUI(_inventoryService.GetInventory());
-            }
+            // var slots = FindObjectOfType<GameInitializer>().gridSlots;
+            // if (diceValue > 0 && diceValue <= slots.Length)
+            // {
+            //     var slot = slots[diceValue - 1];
+            //     var collectedQuantity = _itemService.CollectItem(slot);
+            //     _inventoryService.AddItem(slot.Item.Type, collectedQuantity);
+            //     _inventoryService.SaveInventory();
+            //     _uiService.UpdateInventoryUI(_inventoryService.GetInventory());
+            // }
         }
     }
 }

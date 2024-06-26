@@ -14,7 +14,7 @@ namespace MyGame.UI
 
         private IUIService _uiService;
 
-        public void Initiliaze(IUIService uiService)
+        public void Initialize(IUIService uiService)
         {
             _uiService = uiService;
             Debug.Log("InventoryUI initialized with UIService: " + _uiService);

@@ -11,5 +11,6 @@ namespace MyGame.Models
         Apple,
         Pear,
         Strawberry
+        // Add more item types as needed
     }
 }

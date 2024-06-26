@@ -9,6 +9,7 @@ namespace MyGame.Core.Services
         int GetItemQuantity(ItemType type);
         void SaveInventory();
         void LoadInventory();
+        void ClearInventory();
         Dictionary<ItemType, int> GetInventory(); 
     }
 }
