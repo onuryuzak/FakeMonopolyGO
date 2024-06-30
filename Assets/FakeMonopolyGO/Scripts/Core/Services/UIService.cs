@@ -1,44 +1,58 @@
-using System;
 using System.Collections.Generic;
-using MyGame.Models;
 using UnityEngine;
 
 namespace MyGame.Core.Services
 {
     public class UIService : IUIService
     {
-        private readonly List<IInventoryObserver> _inventoryObservers = new List<IInventoryObserver>();
+        private readonly Dictionary<System.Type, IList<object>> _observers = new Dictionary<System.Type, IList<object>>();
 
-        public void RegisterInventoryObserver(IInventoryObserver observer)
+        public void RegisterObserver<T>(IObserver<T> observer)
         {
-            if (!_inventoryObservers.Contains(observer))
+            var type = typeof(T);
+            if (!_observers.ContainsKey(type))
             {
-                _inventoryObservers.Add(observer);
-                Debug.Log("Observer registered: " + observer);
+                _observers[type] = new List<object>();
+            }
+
+            if (!_observers[type].Contains(observer))
+            {
+                _observers[type].Add(observer);
+                Debug.Log($"Observer registered: {observer.GetType().Name}");
             }
             else
             {
-                Debug.Log("Observer already registered: " + observer);
+                Debug.Log($"Observer already registered: {observer.GetType().Name}");
             }
         }
 
-        public void UnregisterInventoryObserver(IInventoryObserver observer)
+        public void UnregisterObserver<T>(IObserver<T> observer)
         {
-            if (_inventoryObservers.Contains(observer))
+            var type = typeof(T);
+            if (_observers.ContainsKey(type))
             {
-                _inventoryObservers.Remove(observer);
-                Debug.Log("Observer unregistered: " + observer);
+                if (_observers[type].Contains(observer))
+                {
+                    _observers[type].Remove(observer);
+                    Debug.Log($"Observer unregistered: {observer.GetType().Name}");
+                }
             }
         }
 
-        public void UpdateInventoryUI(Dictionary<ItemType, int> inventory)
+        public void NotifyObservers<T>(T data)
         {
-            Debug.Log("Updating Inventory UI. Observer count: " + _inventoryObservers.Count);
-            foreach (var observer in _inventoryObservers)
+            var type = typeof(T);
+            if (_observers.ContainsKey(type))
             {
-                Debug.Log("Updating observer: " + observer);
-                observer.OnInventoryUpdated(inventory);
+                foreach (var observer in _observers[type])
+                {
+                    if (observer is IObserver<T> typedObserver)
+                    {
+                        Debug.Log($"Notifying observer: {observer.GetType().Name}");
+                        typedObserver.OnUpdated(data);
+                    }
+                }
             }
-        }
+        }   
     }
 }

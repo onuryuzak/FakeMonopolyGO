@@ -1,10 +1,7 @@
-using MyGame.Models;
-using System.Collections.Generic;
-
 namespace MyGame.Core.Services
 {
-    public interface IInventoryObserver
+    public interface IObserver<T>
     {
-        void OnInventoryUpdated(Dictionary<ItemType, int> inventory);
+        void OnUpdated(T data);
     }
 }

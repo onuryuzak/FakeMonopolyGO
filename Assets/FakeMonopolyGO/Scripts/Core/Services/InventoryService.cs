@@ -18,6 +18,7 @@ namespace MyGame.Core.Services
             }
 
             _inventory[type] += quantity;
+            Debug.Log(_inventory[type]);
         }
 
         public int GetItemQuantity(ItemType type)
@@ -41,13 +42,14 @@ namespace MyGame.Core.Services
                 JsonUtility.FromJsonOverwrite(json, _inventory);
             }
         }
-        
+
         public void ClearInventory()
         {
             _inventory.Clear();
             if (File.Exists(savePath))
             {
                 File.Delete(savePath);
+                SaveInventory();
             }
         }
 

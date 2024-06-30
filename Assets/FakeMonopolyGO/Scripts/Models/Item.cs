@@ -8,6 +8,7 @@ namespace MyGame.Models
 
     public enum ItemType
     {
+        Empty,
         Apple,
         Pear,
         Strawberry

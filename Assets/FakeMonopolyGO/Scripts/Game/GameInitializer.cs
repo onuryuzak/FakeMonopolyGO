@@ -4,6 +4,7 @@ using MyGame.Core.DI;
 using MyGame.Core.Services;
 using MyGame.Models;
 using MyGame.UI;
+using UnityEditor;
 
 namespace MyGame.Game
 {
@@ -21,26 +22,6 @@ namespace MyGame.Game
         {
             InitializeServices();
             SetupGame();
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                var inventoryService = _serviceContainer.Resolve<IInventoryService>();
-                inventoryService.ClearInventory();
-                var uiService = _serviceContainer.Resolve<IUIService>();
-                uiService.UpdateInventoryUI(inventoryService.GetInventory());
-            }
-
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                var inventoryService = _serviceContainer.Resolve<IInventoryService>();
-                inventoryService.AddItem(ItemType.Apple, 1);
-                inventoryService.AddItem(ItemType.Strawberry, 1);
-                var uiService = _serviceContainer.Resolve<IUIService>();
-                uiService.UpdateInventoryUI(inventoryService.GetInventory());
-            }
         }
 
         private void InitializeServices()
@@ -62,7 +43,7 @@ namespace MyGame.Game
             var mapGenerationService = _serviceContainer.Resolve<IMapGenerationService>();
             _inventoryUI.Initialize(uiService);
             inventoryService.LoadInventory();
-            uiService.UpdateInventoryUI(inventoryService.GetInventory());
+            uiService.NotifyObservers(inventoryService.GetInventory());
 
             CreateGrids();
             mapGenerationService.GenerateMap(_gridSlots);
@@ -76,7 +57,7 @@ namespace MyGame.Game
             _gridSlots = new GridSlot[_mapLength];
             for (int i = 0; i < _mapLength; i++)
             {
-                GameObject slotObject = Instantiate(_gridSlotPrefab, new Vector3(i * 2.0f, 0, 0), Quaternion.identity);
+                GameObject slotObject = Instantiate(_gridSlotPrefab, new Vector3(i, 0, 0), Quaternion.identity);
                 _gridSlots[i] = slotObject.GetComponent<GridSlot>();
             }
         }

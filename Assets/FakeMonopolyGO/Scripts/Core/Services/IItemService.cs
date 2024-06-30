@@ -6,6 +6,8 @@ namespace MyGame.Core.Services
     public class ItemService : IItemService
     {
         private readonly Random _random = new Random();
+        private ItemType[] _itemTypes;
+
 
         public void GenerateItems(GridSlot[] slots)
         {
@@ -17,15 +19,23 @@ namespace MyGame.Core.Services
 
         private Item GenerateRandomItem()
         {
-            if (_random.NextDouble() < 0.5)
+            if (_random.NextDouble() < 0.1)
             {
-                return null;
+                return new Item { Type = ItemType.Empty, Quantity = 0 };
             }
 
-            int enumCount = Enum.GetValues(typeof(ItemType)).Length;
-            var itemType = (ItemType)_random.Next(0, enumCount);
+            _itemTypes = (ItemType[])Enum.GetValues(typeof(ItemType));
+            _itemTypes = Array.FindAll(_itemTypes, itemType => itemType != ItemType.Empty);
+            var randomItemType = GetRandomItemType();
             var quantity = _random.Next(1, 6);
-            return new Item { Type = itemType, Quantity = quantity };
+            return new Item { Type = randomItemType, Quantity = quantity };
+        }
+
+        private ItemType GetRandomItemType()
+        {
+            int enumCount = _itemTypes.Length;
+            int randomIndex = _random.Next(0, enumCount);
+            return _itemTypes[randomIndex];
         }
 
         public int CollectItem(GridSlot slot)

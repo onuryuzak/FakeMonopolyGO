@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using MyGame.Core.Services;
-using MyGame.Models;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
+using MyGame.Core.Services;
+using System.Collections.Generic;
+using MyGame.Models;
 
 namespace MyGame.UI
 {
-    public class InventoryUI : MonoBehaviour, IInventoryObserver
+    public class InventoryUI : MonoBehaviour, IObserver<Dictionary<ItemType, int>>
     {
         [SerializeField] private TMP_Text _inventoryText;
 
@@ -19,16 +17,16 @@ namespace MyGame.UI
             _uiService = uiService;
             Debug.Log("InventoryUI initialized with UIService: " + _uiService);
             Debug.Log("InventoryUI enabled. Registering observer.");
-            _uiService?.RegisterInventoryObserver(this);
+            _uiService?.RegisterObserver(this);
         }
 
         private void OnDisable()
         {
             Debug.Log("InventoryUI disabled. Unregistering observer.");
-            _uiService?.UnregisterInventoryObserver(this);
+            _uiService?.UnregisterObserver(this);
         }
 
-        public void OnInventoryUpdated(Dictionary<ItemType, int> inventory)
+        public void OnUpdated(Dictionary<ItemType, int> inventory)
         {
             Debug.Log("InventoryUI updated with new inventory data.");
             _inventoryText.text = "";
