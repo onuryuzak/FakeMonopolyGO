@@ -12,13 +12,14 @@ namespace MyGame.Core.Services
 
         public void AddItem(ItemType type, int quantity)
         {
+            if (type == ItemType.Empty) return;
             if (!_inventory.ContainsKey(type))
             {
                 _inventory[type] = 0;
             }
 
             _inventory[type] += quantity;
-            Debug.Log(_inventory[type]);
+            SaveInventory();
         }
 
         public int GetItemQuantity(ItemType type)

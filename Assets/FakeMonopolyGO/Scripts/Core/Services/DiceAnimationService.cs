@@ -113,7 +113,7 @@ namespace MyGame.Core.Services
             dice.transform.rotation = targetRotation;
             yield return new WaitForSeconds(1);
             onComplete?.Invoke();
-            dice.transform.localPosition = new Vector3(dice.transform.localPosition.x, 0, 0);
+            dice.transform.localPosition = new Vector3(dice.transform.localPosition.x, 0.2f, 0);
         }
     }
 }

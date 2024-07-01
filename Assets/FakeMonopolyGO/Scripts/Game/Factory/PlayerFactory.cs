@@ -5,13 +5,15 @@ namespace MyGame.Game
 {
     public class PlayerFactory
     {
-        private readonly IItemService _itemService;
+        private readonly IMapGenerationService _mapGenerationService;
         private readonly IInventoryService _inventoryService;
         private readonly IUIService _uiService;
 
-        public PlayerFactory(IItemService itemService, IInventoryService inventoryService, IUIService uiService)
+
+        public PlayerFactory(IMapGenerationService mapGenerationService, IInventoryService inventoryService,
+            IUIService uiService)
         {
-            _itemService = itemService;
+            _mapGenerationService = mapGenerationService;
             _inventoryService = inventoryService;
             _uiService = uiService;
         }
@@ -21,7 +23,7 @@ namespace MyGame.Game
             var playerObject = Object.Instantiate(playerPrefab);
             playerObject.transform.position = new Vector3(0, 0, -1f);
             var player = playerObject.GetComponent<Player>();
-            player.Initialize(_itemService, _inventoryService, _uiService);
+            player.Initialize(_mapGenerationService, _inventoryService,_uiService);
             return player;
         }
     }
