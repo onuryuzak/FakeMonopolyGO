@@ -7,7 +7,7 @@ namespace MyGame.Game
     public class Player : MonoBehaviour
     {
         [SerializeField] private Transform _diceParent;
-        [SerializeField] private float _moveSpeed = 2f;
+        [SerializeField] private float _moveSpeed = 5f;
 
 
         public Transform DiceParent => _diceParent;
@@ -29,11 +29,16 @@ namespace MyGame.Game
 
         private void Update()
         {
-            if (!_isMoving) return;
-            transform.position = Vector3.Lerp(transform.position, _targetPosition, _moveSpeed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, _targetPosition) < 0.1f)
+            if (_isMoving)
             {
-                transform.position = _targetPosition;
+                transform.position = Vector3.Lerp(transform.position, _targetPosition, _moveSpeed * Time.deltaTime);
+
+    
+                if (Vector3.Distance(transform.position, _targetPosition) < 0.1f)
+                {
+                    transform.position = _targetPosition;
+                    _isMoving = false;
+                }
             }
         }
 
@@ -42,7 +47,7 @@ namespace MyGame.Game
             var gridSlots = _mapGenerationService.GetGridSlots();
             int totalGrids = gridSlots.Length;
             currentPlayerIndex = (currentPlayerIndex + steps) % totalGrids;
-            transform.position = gridSlots[currentPlayerIndex].transform.position;
+            _targetPosition = gridSlots[currentPlayerIndex].transform.position;
             _inventoryService.AddItem(gridSlots[currentPlayerIndex].Item.Type,
                 gridSlots[currentPlayerIndex].Item.Quantity);
             _uiService.NotifyObservers(_inventoryService.GetInventory());
